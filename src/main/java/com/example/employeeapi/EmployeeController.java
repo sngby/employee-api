@@ -36,6 +36,20 @@ public class EmployeeController {
     }
 
     @Operation(
+            summary = "Search employees by name",
+            description = "Searches for employees whose names contain the specified text, ignoring case. Requires a valid JWT and the USER role."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Employees retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Authentication required"),
+            @ApiResponse(responseCode = "403", description = "Insufficient permissions")
+    })
+    @GetMapping("/employees/search")
+    public List<EmployeeResponse> searchEmployeeByName(@RequestParam String name){
+        return employeeService.searchEmployeesByName(name);
+    }
+
+    @Operation(
             summary = "Get employee by ID",
             description = "Retrieves an employee by ID. Requires a valid JWT and the USER role."
     )
@@ -141,4 +155,5 @@ public class EmployeeController {
                 ex.getId()
         );
     }
+
 }
