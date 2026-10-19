@@ -95,4 +95,17 @@ public class EmployeeService {
 
         employeeRepository.delete(employee);
     }
+
+    public List<EmployeeResponse> searchEmployeesByName(String name){
+
+        return employeeRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(employee -> new EmployeeResponse(
+                        employee.getId(),
+                        employee.getName(),
+                        employee.getDepartment(),
+                        employee.getEmail()
+                    ))
+                .toList();
+    }
 }

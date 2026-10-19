@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -57,6 +59,37 @@ class EmployeeControllerTest {
                 .andExpect(jsonPath("$.name").value("Alex Tan"))
                 .andExpect(jsonPath("$.department").value("IT"))
                 .andExpect(jsonPath("$.email").value("alex@example.com"));
+    }
+
+    @Test
+    void searchEmployeesByName() throws Exception {
+        EmployeeResponse response = new EmployeeResponse(
+                1001,
+                "Alex Tan",
+                "IT",
+                "alex@example.com"
+        );
+
+        when(employeeService.searchEmployeesByName("ale"))
+                .thenReturn(List.of(response));
+
+        mockMvc.perform(get("/employees/search?name=ale"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1001))
+                .andExpect(jsonPath("$[0].name").value("Alex Tan"))
+                .andExpect(jsonPath("$[0].department").value("IT"))
+                .andExpect(jsonPath("$[0].email").value("alex@example.com"));
+    }
+
+    @Test
+    void searchEmployeesByName_whenEmployeeDoesNotExist() throws Exception {
+        when(employeeService.searchEmployeesByName("nobody"))
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/employees/search?name=nobody"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
     }
 
     @Test
