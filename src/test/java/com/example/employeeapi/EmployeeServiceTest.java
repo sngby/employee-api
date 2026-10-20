@@ -41,6 +41,9 @@ class EmployeeServiceTest {
         EmployeeResponse result = employeeService.findEmployeeById(1001);
 
         assertEquals(1001, result.id());
+        assertEquals("Alex Tan", result.name());
+        assertEquals("IT", result.department());
+        assertEquals("alex@example.com", result.email());
 
         verify(employeeRepository, times(1)).findById(1001);
     }

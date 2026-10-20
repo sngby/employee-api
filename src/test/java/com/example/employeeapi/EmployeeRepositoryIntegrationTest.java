@@ -34,7 +34,11 @@ class EmployeeRepositoryIntegrationTest {
 
         Employee foundEmployee = employeeRepository.findById(2001).orElseThrow();
 
+        assertEquals(2001, foundEmployee.getId());
         assertEquals("Alice", foundEmployee.getName());
+        assertEquals("Finance", foundEmployee.getDepartment());
+        assertEquals(7000, foundEmployee.getSalary());
+        assertEquals("alice@example.com", foundEmployee.getEmail());
     }
 
     @Test
