@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,6 +55,19 @@ public class GlobalExceptionHandler {
     ) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
+
+        return response;
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleMissingRequestParameter(
+            MissingServletRequestParameterException ex
+    ) {
+        logger.warn("Missing request parameter");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Required request parameter is missing");
 
         return response;
     }
