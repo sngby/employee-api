@@ -93,6 +93,14 @@ class EmployeeControllerTest {
     }
 
     @Test
+    void searchEmployeesByName_whenRequestParamIsNotSupplied() throws Exception {
+
+       mockMvc.perform(get("/employees/search"))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.message").value("Required request parameter is missing"));
+    }
+
+    @Test
     void getEmployeeById_whenEmployeeDoesNotExist() throws Exception {
 
         when(employeeService.findEmployeeById(9999))
